@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT, reason = "subSubject exists")
 
-public class SubSubjectExistException extends Exception{
+public class SubSubjectExistException extends RuntimeException{
 }

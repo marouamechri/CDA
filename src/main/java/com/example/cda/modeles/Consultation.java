@@ -28,6 +28,15 @@ public class Consultation extends Event {
     public void setMedicalSpecialties(MedicalSpecialties medicalSpecialties) {
         this.medicalSpecialties = medicalSpecialties;
     }
+    public Event getEvent(){
+        Event event= new Event();
+        event.setId(this.id);
+        event.setDate(this.date);
+        event.setValidate(validate);
+        event.setNatureAction(natureAction);
+        event.setSubSubject(subSubject);
+        return event ;
+    }
 
     public Consultation(){
         super();

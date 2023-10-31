@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     jwtToken = extractJwtFromRequest(request);
                     userName = jwtUserService.getUserNameFromJwt(jwtToken);
                     claims = jwtUserService.getAllClaimsFromToken(jwtToken);
-                    System.out.println("jwtToken: "+jwtToken+" userName: "+userName+ " claims role: "+claims.get("authorities"));
+                    //System.out.println("jwtToken: "+jwtToken+" userName: "+userName+ " claims role: "+claims.get("authorities"));
 
                 }
                 if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {

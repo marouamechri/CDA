@@ -69,11 +69,12 @@ public class EventControllerImpl implements EventController {
                         Analysis analysis = new Analysis(event);
 
                        Analysis result =  analysisService.save(analysis);
-                       return ResponseEntity.status(201).body(analysis);
+                       return ResponseEntity.status(201).body(result);
 
                     }else if(natureAction.getTitle().equals("traitement")){
                         Treatment treatment = new Treatment(event, format.parse(dto.getDateFin()));
                         Treatment result = treatmentService.save(treatment);
+                        return ResponseEntity.status(201).body(result);
                     }
                 }
 
@@ -95,7 +96,7 @@ public class EventControllerImpl implements EventController {
             Event result = eventService.getChidrenEvent(event);
             return  ResponseEntity.status(200).body(result);
         }
-        return ResponseEntity.status(500).body(null);
+        return ResponseEntity.status(409).body(null);
     }
 
     @Override

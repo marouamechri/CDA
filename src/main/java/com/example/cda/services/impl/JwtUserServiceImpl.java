@@ -135,11 +135,7 @@ public class JwtUserServiceImpl implements JwtUserService {
     }
 
     @Override
-    public UserDetails save(String username, String password, String name) throws AccountExistsException {
-        UserDetails userDetails = userRepository.findByUsername(username);
-        if (userDetails != null) {
-            throw new AccountExistsException();
-        }
+    public UserDetails save(String username, String password, String name)  {
 
         Collection<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName("USER"));
@@ -157,6 +153,11 @@ public class JwtUserServiceImpl implements JwtUserService {
     @Override
     public UserDetails get(int id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public UserDetails findByUserName(String username) {
+        return userRepository.findByUsername(username);
     }
 
    /* @Override

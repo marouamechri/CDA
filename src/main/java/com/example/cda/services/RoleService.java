@@ -8,9 +8,9 @@ public interface RoleService {
 
     void remove(int id);
 
-    void attach(UserDetails user, int id);
+    void attach(UserDetails user, Role role);
 
-    void detach(UserDetails user, int id);
+    void detach(UserDetails user, Role role);
 
     Iterable<Role> list();
 

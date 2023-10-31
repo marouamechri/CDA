@@ -15,7 +15,7 @@ import java.text.ParseException;
 
 public interface EventController {
 
-    @PostMapping("spaces/{idSpace}/subject/{idSubject}/subSubject/{idSubSubject}/event")
+    @PostMapping("/spaces/{idSpace}/subject/{idSubject}/subSubject/{idSubSubject}/event")
     ResponseEntity<Event> save(@RequestBody EventDto dto, Principal principal, @PathVariable Long idSpace, @PathVariable Long idSubject,@PathVariable Long idSubSubject ) throws SubjectNotFoundException, URISyntaxException, SpaceNotFoundException, SubjectNotFoundException, NatureNotFoundException;
 
     @GetMapping("/event/{idEvent}")

@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT, reason = "Doctor exists")
 
-public class DoctorUserExistException  extends Exception{
+public class DoctorUserExistException  extends RuntimeException{
 }

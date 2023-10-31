@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT, reason = "Speciality exists")
 
-public class SpecialityExistException extends Exception {
+public class SpecialityExistException extends RuntimeException {
 }

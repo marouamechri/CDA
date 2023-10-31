@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.RoleNotFoundException;
 import java.net.URISyntaxException;
 
 @RequestMapping("/dashboard/admin")
@@ -22,10 +23,10 @@ public interface RoleController {
     ResponseEntity<Role> create(@Valid @RequestBody RoleDto dto) throws URISyntaxException ;
     @PreAuthorize("hasAuthority(\"ADMIN\")")
     @PostMapping("/roles/{roleId}/users/{userId}/attach")
-    ResponseEntity<UserDetails> attach(@PathVariable int roleId, @PathVariable int userId) throws  UserNotFoundException;
+    ResponseEntity<UserDetails> attach(@PathVariable int roleId, @PathVariable int userId) throws UserNotFoundException, RoleNotFoundException;
     @PreAuthorize("hasAuthority(\"ADMIN\")")
     @PostMapping("/roles/{roleId}/users/{userId}/detach")
-    ResponseEntity<UserDetails> detach(@PathVariable int roleId, @PathVariable int userId) throws UserNotFoundException ;
+    ResponseEntity<UserDetails> detach(@PathVariable int roleId, @PathVariable int userId) throws UserNotFoundException, RoleNotFoundException;
     @PreAuthorize("hasAuthority(\"ADMIN\")")
     @DeleteMapping("/roles/{id}")
     ResponseEntity<?> delete(@PathVariable int id) ;

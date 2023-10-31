@@ -5,6 +5,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT, reason = "space exists")
 
-public class SpaceExistException extends Exception{
+public class SpaceExistException extends RuntimeException{
 }
 

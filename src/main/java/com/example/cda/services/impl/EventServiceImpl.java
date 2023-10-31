@@ -139,7 +139,6 @@ public  class EventServiceImpl implements EventService {
                 if((e.getNatureAction().getId() == natureAction.getId())&& (e.isValidate() == isActive)){
                     result.add(e);
                 }
-
             }
         }
         return result;
@@ -234,8 +233,11 @@ public  class EventServiceImpl implements EventService {
 
     @Override
     public Event validationEvent(Event event) {
+        //is valide si event = true =>isValide = false, sinon isValide = true)
         boolean isValid= !event.isValidate();
+        //on recupére le task(si elle existe) qui attent la validation d'event pour qu'elle soit valider
         Task task = taskRepository.getByEventValidate(event);
+        //s'il ya une tache liee à cette event
         if(task!=null){
             try{
                 if(isValid){
@@ -243,6 +245,7 @@ public  class EventServiceImpl implements EventService {
                 }else {
                     task.setState(1);
                 }
+                //on change l'etat de task et de l'event
                 taskRepository.save(task);
                 event.setValidate(isValid);
                 return eventRepository.save(event);
@@ -250,6 +253,7 @@ public  class EventServiceImpl implements EventService {
                 throw  e;
             }
         }
+        //changer que l'etat de l'event
         event.setValidate(isValid);
         return eventRepository.save(event);
 
