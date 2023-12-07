@@ -1,6 +1,7 @@
 package com.example.cda.services;
 
 import com.example.cda.dtos.EventDto;
+import com.example.cda.modeles.Document;
 import com.example.cda.modeles.Event;
 import com.example.cda.modeles.Task;
 import com.example.cda.modeles.User;

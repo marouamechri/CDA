@@ -9,6 +9,7 @@ import com.example.cda.services.MedicalSpecialtiesService;
 import com.example.cda.services.impl.MedicalSpecialtiesServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URISyntaxException;
@@ -20,7 +21,10 @@ public class MedicalSpecialtiesControllerImp implements MedicalSpecialtiesContro
 
     @Override
     public ResponseEntity<MedicalSpecialties> createSpeciality(MedicalSpecialtiesDto dto) throws URISyntaxException, SpecialityExistException {
-        MedicalSpecialties specialityResult = specialityService.save(dto.getSpeciality());
+        MedicalSpecialties medicalSpecialties = new MedicalSpecialties();
+        medicalSpecialties.setSpeciality(dto.getSpeciality());
+        medicalSpecialties.setIcone(dto.getIcone());
+        MedicalSpecialties specialityResult = specialityService.save(medicalSpecialties);
         if(specialityResult==null){
             throw new SpecialityExistException();
         }

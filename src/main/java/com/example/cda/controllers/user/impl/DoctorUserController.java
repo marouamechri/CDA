@@ -10,16 +10,13 @@ import com.example.cda.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class DoctorUserController implements com.example.cda.controllers.user.DoctorUserController {
     @Autowired
@@ -116,7 +113,7 @@ public class DoctorUserController implements com.example.cda.controllers.user.Do
     }
 
     @Override
-    public ResponseEntity<DoctorUser> update(@PathVariable Long idDoctor, @PathVariable Long idSpace, @RequestBody DoctorUserDto dto, Principal principal, @RequestParam String  attach, @RequestParam String detach) throws URISyntaxException, DoctorUserNotFoundException, SpaceNotFoundException, DoctorUserExistException {
+    public ResponseEntity<DoctorUser> update(@PathVariable Long idDoctor, @PathVariable Long idSpace, @RequestBody DoctorUserDto dto, Principal principal) throws URISyntaxException, DoctorUserNotFoundException, SpaceNotFoundException, DoctorUserExistException {
         Space space= spaceService.get(idSpace);
         MedicalSpecialties medicalSpecialty = medicalSpecialtiesService.get(dto.getMedicalSpecialty());
         UserDetails user = userService.loadUserByUsername(principal.getName());
@@ -124,6 +121,7 @@ public class DoctorUserController implements com.example.cda.controllers.user.Do
         boolean DoctorExist = false;
 
         if((space!=null)&& (doctorUser!=null)&&(medicalSpecialty!=null) && (space.getUser().getUsername().equals(user.getUsername())  )){
+            System.out.println("debut updateDoctor");
             List<DoctorUser> doctorUserList = doctorUserService.getAllDoctorByUser(user);
             if(doctorUserList!=null){
                 for (DoctorUser d:doctorUserList) {
@@ -133,30 +131,11 @@ public class DoctorUserController implements com.example.cda.controllers.user.Do
                     }
                 }
             }
-            if(DoctorExist){
-                System.out.println("doctor exist");
+            if(!DoctorExist){
 
                 doctorUser.setName(dto.getName());
                 doctorUser.setAddress(dto.getAddress());
                 doctorUser.setPhone(dto.getPhone());
-                System.out.println("attach= " + attach);
-                System.out.println("detach= "+detach);
-                if(attach.equals("speciality")) {
-                    doctorUserService.attacheDoctorToSpeciality(doctorUser,medicalSpecialty);
-                    System.out.println(doctorUserService.attacheDoctorToSpeciality(doctorUser,medicalSpecialty));
-                } else if(attach.equals("space")){
-                    Boolean existe = doctorUserService.attachDoctorToSpace(doctorUser,space);
-
-                    System.out.println(existe);
-
-                }
-                if(detach.equals("speciality")) {
-                    doctorUserService.detachDoctorToSpeciality(doctorUser,medicalSpecialty);
-                    System.out.println(doctorUserService.detachDoctorToSpeciality(doctorUser,medicalSpecialty));
-                } else if (detach.equals("space")) {
-                    doctorUserService.detachDoctorToSpace(doctorUser,space);
-                    System.out.println(doctorUserService.attachDoctorToSpace(doctorUser,space));
-                }
 
                 DoctorUser result = doctorUserService.save(doctorUser);
 

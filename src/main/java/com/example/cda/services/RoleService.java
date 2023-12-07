@@ -15,5 +15,5 @@ public interface RoleService {
     Iterable<Role> list();
 
     Role get(int id);
-
+   void delete(Role role);
 }

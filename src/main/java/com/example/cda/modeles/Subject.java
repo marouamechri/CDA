@@ -14,7 +14,7 @@ public class Subject {
     @ManyToOne
     private Space space;
 
-    @OneToMany(mappedBy = "subject", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<SubSubject> subSubjects= new ArrayList<>();
 

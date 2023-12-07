@@ -12,5 +12,6 @@ public interface NatureActionService {
     void  delete (NatureAction natureAction);
     NatureAction update(NatureAction natureAction, NatureAction natureExist);
     NatureAction findByTitle(String title);
+    int getId(String title);
 
 }

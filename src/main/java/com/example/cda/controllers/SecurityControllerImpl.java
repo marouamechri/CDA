@@ -27,6 +27,7 @@ public class SecurityControllerImpl  implements SecurityController {
     @Override
     public ResponseEntity<AuthResponseDto> register(@RequestBody AuthRequestDto dto) throws AccountExistsException {
         UserDetails userDetails = jwtUserService.findByUserName(dto.getUsername());
+        System.out.println("signup");
         if (userDetails != null) {
             throw new AccountExistsException();
         }
@@ -41,9 +42,7 @@ public class SecurityControllerImpl  implements SecurityController {
     }
     @Override
     public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto dto) throws Exception {
-        //System.out.println("debut");
-        //String userName = jwtUserService.loadUserByUsername(dto.getUsername()).getUsername();
-        //System.out.println("userName = "+userName);
+
 
         Authentication authentication = jwtUserService.authenticate(dto.getUsername(), dto.getPassword());
         //System.out.println("authentication:  "+authentication.getPrincipal());

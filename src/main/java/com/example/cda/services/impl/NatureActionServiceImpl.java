@@ -61,4 +61,9 @@ public class NatureActionServiceImpl implements NatureActionService {
         return natureActionRepository.findByTitle(title);
     }
 
+    @Override
+    public int getId(String title) {
+        return natureActionRepository.findByTitle(title).getId();
+    }
+
 }

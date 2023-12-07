@@ -22,10 +22,11 @@ public  class Event {
     protected SubSubject subSubject;
     @ManyToOne
     protected NatureAction natureAction;
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(mappedBy ="events",  cascade = CascadeType.REMOVE)
     List<Document> prescription;
 
-    @OneToMany(mappedBy = "event",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event",  cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     protected List<Task> tasks= new ArrayList<>();
 
@@ -88,7 +89,4 @@ public  class Event {
         return prescription;
     }
 
-    public void setPrescription(List<Document> prescription) {
-        this.prescription = prescription;
-    }
 }

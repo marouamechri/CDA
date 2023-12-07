@@ -14,14 +14,12 @@ public class Task {
     private Event event;
     @OneToOne
     private Event eventValidate;
-    @OneToOne
-    private Event nextEvent;
     private String typeTask;
 
     private int state;
     @ManyToOne
     private NatureAction natureAction;
-    @ManyToMany
+    @ManyToMany(mappedBy = "tasks",cascade = CascadeType.REMOVE )
     List<Document> prescription;
 
     public Task(){}
@@ -58,14 +56,6 @@ public class Task {
         this.eventValidate = eventValidate;
     }
 
-    public Event getNextEvent() {
-        return nextEvent;
-    }
-
-    public void setNextEvent(Event nextEvent) {
-        this.nextEvent = nextEvent;
-    }
-
     public String getTypeTask() {
         return typeTask;
     }
@@ -94,7 +84,4 @@ public class Task {
         return prescription;
     }
 
-    public void setPrescription(List<Document> prescription) {
-        this.prescription = prescription;
-    }
 }

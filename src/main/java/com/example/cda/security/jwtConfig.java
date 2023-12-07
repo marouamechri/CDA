@@ -2,6 +2,8 @@ package com.example.cda.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,8 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.CorsConfiguration;
-
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -37,24 +43,62 @@ public class jwtConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
-        HttpSecurity httpSecurity = http    //.cors().and().csrf().disable()
-                .cors(cors -> cors.disable())
-                .csrf(csrf -> csrf.disable())
+        http
+                .csrf(csrf->csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // On place notre filter dans le middleware
                 .addFilterBefore(securityFilter(), UsernamePasswordAuthenticationFilter.class)
-                //.authorizeHttpRequests((authz) -> authz.anyRequest().permitAll());
+                .authorizeRequests((authz) -> authz
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Autoriser les requêtes préliminaires
+                        .requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/forgotPassword", "POST")).permitAll()
 
-               .authorizeRequests((authz) -> authz
-                        .requestMatchers("/login", "/signup", "/forgotPassword").permitAll()
-                        .requestMatchers("/admin/**")
-                        .hasAuthority("ADMIN")
-                        //.requestMatchers("/user/**")
-                        //.hasAuthority("USER")
+                        .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated());
-
-
-        return httpSecurity.build();
+        return http.build();
     }
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Autoriser les requêtes depuis http://localhost:4200
+        config.addAllowedOrigin("http://localhost:4200");
+
+        // Autoriser tous les en-têtes
+        config.addAllowedHeader("*");
+
+        // Autoriser toutes les méthodes (GET, POST, PUT, DELETE, etc.)
+        config.addAllowedMethod("*");
+
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+
+  /*  @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.applyPermitDefaultValues();
+        // Configurer mes options
+        corsConfig.setAllowCredentials(true);
+
+        corsConfig.addAllowedOrigin("*");
+        corsConfig.addAllowedMethod("*");
+        /*corsConfig.addAllowedMethod("POST");
+        corsConfig.addAllowedMethod("PUT");
+        corsConfig.addAllowedMethod("DELETE");
+        corsConfig.addAllowedMethod("OPTIONS");*/
+
+       /* corsConfig.addAllowedHeader("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+
+
+        return source;
+    }*/
+
+
 }

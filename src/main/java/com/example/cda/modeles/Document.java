@@ -2,6 +2,7 @@ package com.example.cda.modeles;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
 
@@ -9,32 +10,33 @@ import java.util.List;
 public class Document {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    protected Long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     private String name;
-    @JsonIgnore
-    @ManyToMany(mappedBy ="prescription" )
+
+    private String type;
+    @Column(name = "data", columnDefinition = "LONGBLOB")
+    @Lob
+    private byte[] data;
+
+    @ManyToMany
     private List<Event> events;
     @JsonIgnore
-    @ManyToMany(mappedBy = "prescription")
+    @ManyToMany
     private List<Task> tasks;
-    @ManyToOne
-    private Analysis resultAnalyse;
 
     public Document(){};
-    public Document(Long id, String name) {
-        this.id = id;
+    public Document(String name, String type, byte[] data) {
         this.name = name;
+        this.type = type;
+        this.data = data;
+    }
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -52,11 +54,31 @@ public class Document {
         return tasks;
     }
 
-    public Analysis getResultAnalyse() {
-        return resultAnalyse;
+    public String getId() {
+        return id;
     }
 
-    public void setResultAnalyse(Analysis resultAnalyse) {
-        this.resultAnalyse = resultAnalyse;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

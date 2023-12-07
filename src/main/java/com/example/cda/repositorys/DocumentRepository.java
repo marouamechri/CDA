@@ -5,5 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DocumentRepository extends CrudRepository<Document, Long> {
+public interface DocumentRepository extends CrudRepository<Document, String> {
+    Document findByName(String name);
 }

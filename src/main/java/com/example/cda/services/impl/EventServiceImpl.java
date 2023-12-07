@@ -1,6 +1,8 @@
 package com.example.cda.services.impl;
 
+import com.example.cda.dtos.ResponseEvent;
 import com.example.cda.modeles.*;
+import com.example.cda.repositorys.DocumentRepository;
 import com.example.cda.repositorys.EventRepository;
 import com.example.cda.repositorys.NatureActionRepository;
 import com.example.cda.repositorys.TaskRepository;
@@ -8,6 +10,7 @@ import com.example.cda.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,10 +37,13 @@ public  class EventServiceImpl implements EventService {
     AnalysisService analysisService;
     @Autowired
     TaskRepository taskRepository;
-
+    @Autowired
+    DocumentRepository documentRepository;
     @Override
     public Event save(Event event) {
-      return   eventRepository.save(event);
+
+           return  eventRepository.save(event);
+
     }
 
     @Override
@@ -46,12 +52,12 @@ public  class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAllEventBySubSubject(SubSubject subSubject, boolean isActive) {
+    public List<Event> getAllEventBySubSubject(SubSubject subSubject, boolean isValidate) {
         List<Event> events = subSubject.getEvents();
         List<Event> result = new ArrayList<>();
         if(events!=null){
             for (Event e: events) {
-                if(e.isValidate()==isActive){
+                if(e.isValidate()==isValidate){
                     result.add(e);
                 }
 
@@ -73,17 +79,21 @@ public  class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAllEventBySpace(Space space, boolean isActive) {
+    public List<ResponseEvent> getAllEventBySpace(Space space, boolean isValidate) {
         List<Subject> subjects = space.getSubjects();
-        List<Event> events = new ArrayList<>();
+        List<ResponseEvent> result = new ArrayList<>();
+       String nameSpace = space.getName();
         if(subjects!=null){
             for (Subject s: subjects) {
+                String titleSubject = s.getTitle();
                 if(s.getSubSubjects()!=null){
                     for (SubSubject ss :s.getSubSubjects()) {
+                        String titleSunSubject = ss.getTitle();
                         if(ss.getEvents()!=null){
                             for (Event e:ss.getEvents()) {
-                               if (e.isValidate()==isActive){
-                                   events.add(e);
+                               if (e.isValidate()==isValidate){
+                                   ResponseEvent responseEvent =  new ResponseEvent(e,nameSpace,titleSubject,titleSunSubject);
+                                   result.add(responseEvent);
                                }
                             }
                         }
@@ -92,7 +102,7 @@ public  class EventServiceImpl implements EventService {
                 }
             }
         }
-        return events;
+        return result;
     }
 
     @Override
@@ -131,12 +141,12 @@ public  class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getListEventByNatureAction(List<Event> eventList, int idNatureAction, boolean isActive) {
+    public List<Event> getListEventByNatureAction(List<Event> eventList, int idNatureAction, boolean isValidate) {
         NatureAction natureAction = natureActionRepository.findById(idNatureAction).orElse(null);
         List<Event> result = new ArrayList<>();
         if(natureAction!=null){
             for (Event e:eventList) {
-                if((e.getNatureAction().getId() == natureAction.getId())&& (e.isValidate() == isActive)){
+                if((e.getNatureAction().getId() == natureAction.getId())&& (e.isValidate() == isValidate)){
                     result.add(e);
                 }
             }
@@ -148,8 +158,10 @@ public  class EventServiceImpl implements EventService {
 
     @Override
     public void delete(Event event) {
+
         eventRepository.delete(event);
     }
+
 
     @Override
     public boolean validInformation( User user,Long idSpace, Long idSubject, Long idSubSubject) {
@@ -165,19 +177,23 @@ public  class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAllEventByUser(User user, boolean isActive) {
-        List<Event> result = new ArrayList<>();
+    public List<ResponseEvent> getAllEventByUser(User user, boolean isValidate) {
+        List<ResponseEvent> result = new ArrayList<>();
         List<Space> spaces = user.getSpaces();
         if(spaces!=null){
             for (Space s:spaces) {
+                String nameSpace = s.getName();
                 if(s.getSubjects()!=null){
                     for (Subject sub: s.getSubjects()){
+                        String nameSubject= s.getName();
                         if(sub.getSubSubjects()!=null){
                             for (SubSubject subSub: sub.getSubSubjects()){
+                               String nameSubSubject= sub.getTitle();
                                 if(subSub.getEvents()!=null){
                                     for (Event e:subSub.getEvents())
-                                       if (e.isValidate() == isActive){
-                                           result.add(e);
+                                       if (e.isValidate() == isValidate){
+                                           ResponseEvent responseEvent = new ResponseEvent(e,nameSpace,nameSubject, nameSubSubject);
+                                           result.add(responseEvent);
 
                                        }
                                 }
@@ -195,15 +211,19 @@ public  class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAllEventBySubject(Long idSubject, boolean isActive) {
-        List<Event> result = new ArrayList<>();
+    public List<ResponseEvent> getAllEventBySubject(Long idSubject, boolean isValidate) {
+        List<ResponseEvent> result = new ArrayList<>();
         Subject subject = subjectService.get(idSubject);
+        String nameSpace = subject.getSpace().getName();
+        String titleSubject = subject.getTitle();
         if (subject!=null && subject.getSubSubjects()!=null){
             for (SubSubject s: subject.getSubSubjects()){
+                String titleSubSubject = s.getTitle();
                 if(s.getEvents()!=null){
                     for (Event e:s.getEvents()) {
-                        if(e.isValidate()==isActive){
-                            result.add(e);
+                        if(e.isValidate()==isValidate){
+                            ResponseEvent responseEvent = new ResponseEvent(e,nameSpace,titleSubject, titleSubSubject);
+                            result.add(responseEvent);
                         }
                     }
                 }
@@ -303,4 +323,14 @@ public  class EventServiceImpl implements EventService {
         }
         return result;
     }
+
+    @Override
+    public Event forceValidation(Event event) {
+        event.setValidate(!event.isValidate());
+        eventRepository.save(event);
+        return event;
+    }
+
+
+
 }

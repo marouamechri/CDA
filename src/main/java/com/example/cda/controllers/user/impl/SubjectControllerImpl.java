@@ -14,6 +14,7 @@ import com.example.cda.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class SubjectControllerImpl implements SubjectController {
     @Autowired
@@ -33,12 +34,14 @@ public class SubjectControllerImpl implements SubjectController {
 
     @Override
     public ResponseEntity<Subject> save(SubjectDto dto, Principal principal, @PathVariable Long idSpace) throws SubjectExistException, URISyntaxException, SpaceNotFoundException {
+
         //contoler si le user sapace est le même principale
         Space space= spaceService.get(idSpace);
         User user =(User) userService.loadUserByUsername(principal.getName());
         boolean subjectExist = false;
 
         if((space!=null) && (user.getId() == space.getUser().getId())){
+            System.out.println("etape 1");
             Iterable<Subject> subjects = subjectService.getAllSubjectBySpace(space);
             if(subjects!=null) {
                 for (Subject s : subjects) {
@@ -48,6 +51,8 @@ public class SubjectControllerImpl implements SubjectController {
                 }
             }
             if(!subjectExist){
+                System.out.println("etape 2");
+
                 Subject subject = new Subject();
                 subject.setTitle(dto.getTitle());
                 subject.setSpace(space);
@@ -118,7 +123,22 @@ public class SubjectControllerImpl implements SubjectController {
     }
 
     @Override
-    public ResponseEntity<?> delete(@PathVariable Long idSubject, Principal principal) throws URISyntaxException, SubjectNotFoundException {
-        return null;
+    public ResponseEntity<?> delete(@PathVariable Long idSubject,@PathVariable Long idSpace, Principal principal) throws URISyntaxException, SubjectNotFoundException, SpaceNotFoundException {
+        Space space = spaceService.get(idSpace);
+        if (space == null) {
+            throw new SpaceNotFoundException();
+        }
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        if ((user.getId() == space.getUser().getId()) && (spaceService.subjectExistSpace(space, idSubject))) {
+            Subject subject = subjectService.get(idSubject);
+            if (subject == null) {
+                return ResponseEntity.status(500).body(null);
+                } else
+                    subjectService.delete(subject);
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.status(403).body(null);
+        }
     }
-}
+
+

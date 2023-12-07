@@ -6,13 +6,14 @@ import com.example.cda.exceptions.*;
 import com.example.cda.modeles.SubSubject;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
 import java.security.Principal;
 
 @RequestMapping(path = "/user/spaces/{idSpace}/subject/{idSubject}")
-
+@PreAuthorize("hasAuthority(\"USER\")")
 public interface SubSubjectController {
 
     @PostMapping("/subSubject")

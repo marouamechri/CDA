@@ -19,7 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class SpaceControllerImp  implements SpaceController {
     @Autowired
@@ -33,18 +33,16 @@ public class SpaceControllerImp  implements SpaceController {
         Space newSpace = new Space();
         newSpace.setName(dto.getName());
         UserDetails user = userService.loadUserByUsername(principal.getName());
-        System.out.println("user"+user);
+       // System.out.println("user"+user);
         if(user!=null){
             newSpace.setUser((User)user);
             Space result =  spaceService.save(newSpace,(User) user);
             if(result==null){
-                System.out.println("result null");
                 throw new SpaceExistException();
-            }
+            }else
             return ResponseEntity.status(201).body(result);
         }else
             throw new UserNotFoundException();
-
     }
     @Override
     public ResponseEntity<Space> get(@PathVariable Long id, Principal principal) throws URISyntaxException, SpaceNotFoundException {
@@ -73,16 +71,20 @@ public class SpaceControllerImp  implements SpaceController {
         }
     }
     @Override
-    public ResponseEntity<Space> update(@PathVariable Long id,@Valid @RequestBody SpaceDto dto, Principal principal ) throws URISyntaxException, SpaceNotFoundException {
+    public ResponseEntity<Space> update(@PathVariable Long id, @RequestBody SpaceDto dto, Principal principal ) throws URISyntaxException, SpaceNotFoundException {
 
         Space spaceExist = spaceService.get(id);
         if(spaceExist==null){
             throw new SpaceNotFoundException();
         }
         User user =(User) userService.loadUserByUsername(principal.getName());
+        Space space = new Space();
         if(user!=null){
             if(user.getId() == spaceExist.getUser().getId() ){
-                Space result = spaceService.update(spaceExist, dto.getName());
+                space.setId(spaceExist.getId());
+                space.setName(dto.getName());
+                space.setUser(user);
+                Space result = spaceService.save(space, user);
                 return ResponseEntity.status(200).body(result);
             }
              return ResponseEntity.status(403).body(null);
@@ -97,27 +99,16 @@ public class SpaceControllerImp  implements SpaceController {
         User user = (User) userService.loadUserByUsername(principal.getName());
         Space spaceExist = spaceService.get(id);
         if(user!=null){
-            if (user.getId()== spaceExist.getUser().getId() ) {
-                return ResponseEntity.status(403).body(null);
+            if (spaceExist == null) {
+                throw new SpaceNotFoundException();
+             }else if (user.getId()== spaceExist.getUser().getId() ) {
+                spaceService.delete(spaceExist);
+                return ResponseEntity.noContent().build();
             }
+            return ResponseEntity.status(403).body(null);
         }
-        if (spaceExist == null) {
-            throw new SpaceNotFoundException();
-        }
-        /*try{
-            List<Event> eventList = spaceExist.getEvents();
-            for (Event event:eventList) {
-               for (Task t:event.getTasks()) {
-                    taskService.delete(t);
-                }
-                eventService.delete(event);
-            }*/
-        spaceService.delete(id);
-        return ResponseEntity.noContent().build();// Sending a 204 HTTP status code
+        return ResponseEntity.status(403).body(null);
 
-       /* }catch (Exception e){
-            throw e;
-        }*/
     }
 
 }

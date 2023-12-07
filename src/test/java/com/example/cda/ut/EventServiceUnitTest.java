@@ -1,5 +1,6 @@
 package com.example.cda.ut;
 
+import com.example.cda.dtos.ResponseEvent;
 import com.example.cda.modeles.*;
 import com.example.cda.repositorys.EventRepository;
 import com.example.cda.repositorys.NatureActionRepository;
@@ -198,7 +199,7 @@ public class EventServiceUnitTest {
        Mockito.when(subSubject2.getEvents()).thenReturn(List.of(event3))   ;
 
         //Appeler la methode à tester
-        List<Event> result = eventService.getAllEventBySpace(space,true);
+        List<ResponseEvent> result = eventService.getAllEventBySpace(space,true);
 
         //Vérifier les résultat
         Assertions.assertEquals(2, result.size());
@@ -405,7 +406,7 @@ public class EventServiceUnitTest {
         Mockito.when(subSubject2.getEvents())  .thenReturn(List.of(event3))    ;
 
         //Appeler la methode à tester
-        List<Event> result = eventService.getAllEventByUser(user,true);
+        List<ResponseEvent> result = eventService.getAllEventByUser(user,true);
 
         //Vérifier les résultat
         Assertions.assertEquals(2, result.size());
@@ -446,7 +447,7 @@ public class EventServiceUnitTest {
 
 
         //Appeler la methode à tester
-        List<Event> result = eventService.getAllEventBySubject(idSubject,true);
+        List<ResponseEvent> result = eventService.getAllEventBySubject(idSubject,true);
 
         //Vérifier les résultat
         Assertions.assertEquals(2, result.size());

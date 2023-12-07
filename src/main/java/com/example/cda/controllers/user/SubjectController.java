@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URISyntaxException;
 import java.security.Principal;
 @RequestMapping(path = "/user/spaces/{idSpace}")
+@PreAuthorize("hasAuthority(\"USER\")")
 public interface SubjectController {
     @PostMapping("/subject")
     ResponseEntity<Subject> save(@Valid @RequestBody SubjectDto dto, Principal principal, @PathVariable Long idSpace) throws SubjectExistException, URISyntaxException, SpaceNotFoundException;
@@ -26,7 +27,7 @@ public interface SubjectController {
     @PutMapping("/subject/{idSubject}")
     public ResponseEntity<Subject> update(@PathVariable Long idSubject,@PathVariable Long idSpace,@Valid @RequestBody SubjectDto dto, Principal principal ) throws URISyntaxException, SubjectNotFoundException, SpaceNotFoundException;
     @DeleteMapping("/subject/{idSubject}")
-    public ResponseEntity<?> delete(@PathVariable Long idSubject, Principal principal) throws URISyntaxException, SubjectNotFoundException;
+    public ResponseEntity<?> delete(@PathVariable Long idSubject,@PathVariable Long idSpace, Principal principal) throws URISyntaxException, SubjectNotFoundException, SpaceNotFoundException;
 
 }
 

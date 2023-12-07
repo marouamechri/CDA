@@ -52,6 +52,11 @@ public class User implements UserDetails {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getRolesString() {
+        return roles.toString();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

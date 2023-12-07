@@ -46,16 +46,16 @@ public class JwtUserServiceImpl implements JwtUserService {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public String generateJwtForUser(UserDetails user) {
+    public String generateJwtForUser(UserDetails userDetails) {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + 3* 60*60*1000);
-        String username = user.getUsername();
+        String username = userDetails.getUsername();
+        User user = (User)  userDetails;
         //String refresh_token = generateJwtRefreshToken(user);
-
         String jwtAccessToken = Jwts.builder()
                 .setSubject(username)
-                .claim("authorities", user.getAuthorities())
+                .claim("authorities", user.getRolesString())
                 .setIssuedAt(now).setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, signingKey).compact();
         return jwtAccessToken;

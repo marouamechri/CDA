@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -43,14 +44,22 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllTaskByEvent(Event event) {
-        return event.getTasks();
+        Iterable<Task> tasks = taskRepository.findAll();
+        List<Task> result = new ArrayList<>();
+        for (Task t:tasks) {
+            if (t.getEvent().getId() == event.getId()) {
+                result.add(t);
+            }
+
+        }
+        return result;
     }
 
     @Override
     public void delete(Long idTask) {
         Task task = taskRepository.findById(idTask).orElse(null);
         if(task!=null){
-            taskRepository.deleteAll();
+            taskRepository.delete(task);
         }
     }
 
@@ -73,7 +82,6 @@ public class TaskServiceImpl implements TaskService {
                             //state 0 : task non valide, state 1: task en cours, state:2 task valide
                             task.setState(1);
                             task.setEventValidate(eventFinal);
-                            task.setNextEvent(eventFinal);
                           return   taskRepository.save(task);
                         }catch (Exception e){
                             throw  e;
@@ -86,7 +94,6 @@ public class TaskServiceImpl implements TaskService {
                         Event eventFinal = analysisService.save(analysis);
                         task.setState(1);
                         task.setEventValidate(eventFinal);
-                        task.setNextEvent(eventFinal);
                         return   taskRepository.save(task);
 
                     }catch (Exception e){
@@ -99,7 +106,6 @@ public class TaskServiceImpl implements TaskService {
                         Event eventFinal = treatmentService.save(treatment);
                         task.setState(1);
                         task.setEventValidate(eventFinal);
-                        task.setNextEvent(eventFinal);
                         return   taskRepository.save(task);
 
                     }catch (Exception e){
@@ -179,4 +185,5 @@ public class TaskServiceImpl implements TaskService {
         }
         return false;
     }
+
 }

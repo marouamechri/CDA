@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
-
 @RequestMapping(path = "/user")
+@PreAuthorize("hasAuthority(\"USER\")")
 public interface SpaceController {
     @PostMapping("/spaces")
     ResponseEntity<Space> save(@Valid @RequestBody SpaceDto dto, Principal principal) throws SpaceExistException, URISyntaxException, UserNotFoundException;
@@ -24,7 +24,7 @@ public interface SpaceController {
     ResponseEntity<List<Space>> getAllSpaceByUser(Principal principal)  ;
 
     @PutMapping("/spaces/{id}")
-    public ResponseEntity<Space> update(@PathVariable Long id,@Valid @RequestBody SpaceDto dto, Principal principal ) throws URISyntaxException, SpaceNotFoundException;
+    public ResponseEntity<Space> update(@PathVariable Long id, @RequestBody SpaceDto dto, Principal principal ) throws URISyntaxException, SpaceNotFoundException;
 
     @DeleteMapping("/spaces/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, Principal principal) throws URISyntaxException, SpaceNotFoundException;

@@ -13,22 +13,27 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 
+@CrossOrigin(origins = "http://localhost:4200/")
 public interface NatureActionController {
     @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @PostMapping("/dashboard/admin/natureAction")
+    @PostMapping("/admin/natureAction")
     ResponseEntity<NatureAction> createNatureAction(@Valid @RequestBody NatureActionDto dto) throws NatureExistException, URISyntaxException;
-
-    @GetMapping("/natureAction/{id}")
+    @PreAuthorize("hasAuthority(\"USER\")")
+    @GetMapping("/user/natureAction/{id}")
     ResponseEntity<NatureAction> getNatureAction(@PathVariable int id) throws NatureNotFoundException;
-    @GetMapping("/natureAction")
+
+    @PreAuthorize("hasAuthority(\"USER\")")
+    @GetMapping("/user/natureAction")
     ResponseEntity<List<NatureAction>> getAllNatureEvent();
-    @GetMapping("/natureTask")
+    @PreAuthorize("hasAuthority(\"USER\")")
+    @GetMapping("/user/natureTask")
     ResponseEntity<List<NatureAction>> getAllNatureTask();
+
     @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @DeleteMapping("/dashboard/admin/natureAction/{id}")
+    @DeleteMapping("/admin/natureAction/{id}")
     ResponseEntity<?> deleteNatureAction(@PathVariable int id)throws NatureNotFoundException;
     @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @PutMapping("/dashboard/admin/natureAction/{id}")
+    @PutMapping("/admin/natureAction/{id}")
     ResponseEntity<NatureAction> updateNatureAction( @Valid @RequestBody NatureActionDto dto, @PathVariable int id) throws NatureNotFoundException;
 
 

@@ -5,6 +5,7 @@ import com.example.cda.modeles.SubSubject;
 import com.example.cda.modeles.Subject;
 import com.example.cda.modeles.User;
 import com.example.cda.repositorys.SubjectRepository;
+import com.example.cda.services.SubSubjectService;
 import com.example.cda.services.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void delete(Long id) {
-        Subject subjectExist = subjectRepository.findById(id).orElse(null);
-        if(subjectExist!= null){
-            subjectRepository.delete( subjectExist);
-        }
-
+    public void delete(Subject subject) {
+            subjectRepository.delete(subject);
     }
 
     @Override

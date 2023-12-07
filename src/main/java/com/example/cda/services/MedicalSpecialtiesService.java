@@ -6,7 +6,7 @@ import com.example.cda.modeles.MedicalSpecialties;
 import java.util.List;
 
 public interface MedicalSpecialtiesService {
-    MedicalSpecialties save(String speciality);
+    MedicalSpecialties save(MedicalSpecialties medicalSpecialties);
     MedicalSpecialties get(int id);
     Iterable<MedicalSpecialties> getAll();
     void delete(MedicalSpecialties specialitySante);

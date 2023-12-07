@@ -11,22 +11,13 @@ public class DoctorUser {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String name ;
-    private String Address;
+    private String address;
     private  String phone;
     @ManyToMany
-    @JoinTable(
-            name = "doctor_speciality",
-            joinColumns = @JoinColumn(name = "doctorUser_id"),
-            inverseJoinColumns = @JoinColumn(name = "medicalSpecialties_id")
-    )
     private List<MedicalSpecialties> medicalSpecialties= new ArrayList<>();
     @ManyToMany
-    @JoinTable(
-            name = "doctor_space",
-            joinColumns = @JoinColumn(name = "doctorUser_id"),
-            inverseJoinColumns = @JoinColumn(name = "space_id")
-    )
     private List<Space> spaces= new ArrayList<>();
+
 
 
     public DoctorUser(){}
@@ -48,11 +39,11 @@ public class DoctorUser {
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public String getPhone() {

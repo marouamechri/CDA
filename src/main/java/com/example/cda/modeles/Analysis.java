@@ -7,8 +7,6 @@ import java.util.List;
 
 @Entity
 public class Analysis extends Event {
-    @OneToMany(mappedBy = "resultAnalyse")
-    private List<Document> results;
     public Analysis(){
         super();
     };
@@ -17,11 +15,4 @@ public class Analysis extends Event {
                 event.getNatureAction());
     }
 
-    public List<Document> getResults() {
-        return results;
-    }
-
-    public void setResults(List<Document> results) {
-        this.results = results;
-    }
 }

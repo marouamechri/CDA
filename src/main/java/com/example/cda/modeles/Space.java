@@ -17,10 +17,10 @@ public class Space {
     private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "space",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "space",cascade = CascadeType.REMOVE)
     private List<Subject> subjects =new ArrayList<>();
     @JsonIgnore
-    @ManyToMany(mappedBy = "spaces",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "spaces", cascade = CascadeType.REMOVE)
     private List<DoctorUser> doctorUsers= new ArrayList<>();
 
 

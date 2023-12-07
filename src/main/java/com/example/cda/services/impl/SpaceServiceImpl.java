@@ -26,16 +26,18 @@ public class SpaceServiceImpl implements SpaceService {
         Boolean spaceExist=false;
 
         if(spaces!=null){
-            for (Space e:spaces) {
-                e.getName().equals(space.getName());
-                spaceExist = true;
+            for (Space e : spaces) {
+               if(e.getName().equals(space.getName())){
+                   System.out.println( e.getName() + " "+ space.getName());
+                   spaceExist = true;
+               }
             }
-            if(!spaceExist){
-                return spaceRepository.save(space);
-            }
-
         }
-            return spaceRepository.save(space);
+        System.out.println("SpaceExiste: "+ spaceExist);
+        if(spaceExist){
+            return null;
+        }else
+        return  spaceRepository.save(space);
 
     }
 
@@ -56,17 +58,8 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
-    public void delete(Long id) {
-        Space spaceExist = spaceRepository.findById(id).orElse(null);
-        if(spaceExist!= null){
-            spaceRepository.delete( spaceExist);
-        }
-    }
+    public void delete(Space space) {         spaceRepository.delete( space);
 
-    @Override
-    public Space update(Space space, String name) {
-        space.setName(name);
-        return spaceRepository.save(space);
     }
 
     @Override

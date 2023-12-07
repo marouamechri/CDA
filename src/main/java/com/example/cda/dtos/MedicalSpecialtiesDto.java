@@ -6,6 +6,7 @@ public class MedicalSpecialtiesDto {
     private int  id;
     @NotBlank
     private String  speciality;
+    private String icone;
 
     public MedicalSpecialtiesDto(int id, String speciality) {
         this.id = id;
@@ -26,5 +27,13 @@ public class MedicalSpecialtiesDto {
 
     public void setSpeciality(String speciality) {
         this.speciality = speciality;
+    }
+
+    public String getIcone() {
+        return icone;
+    }
+
+    public void setIcone(String icone) {
+        this.icone = icone;
     }
 }

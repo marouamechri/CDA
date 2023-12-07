@@ -10,20 +10,23 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
+@CrossOrigin(origins = "http://localhost:4200/")
 
 public interface MedicalSpecialtiesController {
     @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @PostMapping("/dashboard/admin/medicalSpecialties")
+    @PostMapping("/admin/medicalSpecialties")
     ResponseEntity<MedicalSpecialties> createSpeciality(@Valid @RequestBody MedicalSpecialtiesDto dto) throws URISyntaxException, SpecialityExistException;
-    @GetMapping("/medicalSpecialties/{id}")
+    @PreAuthorize("hasAuthority(\"USER\")")
+    @GetMapping("/user/medicalSpecialties/{id}")
     ResponseEntity<MedicalSpecialties> getSpeciality(@PathVariable int id) throws SpecialityNotFoundException;
-    @GetMapping("/medicalSpecialties")
+    @PreAuthorize("hasAuthority(\"USER\")")
+    @GetMapping("/user/medicalSpecialties")
     ResponseEntity<Iterable<MedicalSpecialties>> getAllSpeciality();
     @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @DeleteMapping("/dashboard/admin/medicalSpecialties/{id}")
+    @DeleteMapping("/admin/medicalSpecialties/{id}")
     public ResponseEntity<?> deleteSpeciality(@PathVariable int id) throws URISyntaxException, SpecialityNotFoundException;
     @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @PutMapping("/dashboard/admin/medicalSpecialties/{id}")
+    @PutMapping("/admin/medicalSpecialties/{id}")
     public ResponseEntity<MedicalSpecialties> updateSpeciality(@PathVariable int id ,@Valid @RequestBody MedicalSpecialtiesDto dto) throws URISyntaxException, SpecialityNotFoundException;
 
 

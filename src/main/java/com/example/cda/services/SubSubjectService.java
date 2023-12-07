@@ -11,6 +11,6 @@ public interface SubSubjectService {
     SubSubject save(SubSubject subSubject);
     SubSubject get(Long id);
     List<SubSubject> getAllSubSubjectBySubject(Subject subject);
-    void delete(Long id);
+    void delete(SubSubject subSubject);
     SubSubject update(SubSubject subSubject, SubSubject newSubSubject);
 }

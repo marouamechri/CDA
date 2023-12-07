@@ -10,7 +10,7 @@ public interface SpaceService {
     Space save(Space space, User user);
     Space get(Long id);
     Iterable<Space> getAllSpaceByUser(UserDetails userDetails);
-    void delete(Long id);
-    Space update(Space space, String name);
+    void delete(Space space);
+    //Space update(Space space, User user);
     boolean subjectExistSpace(Space space, Long idSubject);
 }

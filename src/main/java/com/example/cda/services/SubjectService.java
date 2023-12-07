@@ -9,7 +9,7 @@ public interface SubjectService {
     Subject save(Subject subject);
     Subject get(Long id);
     Iterable<Subject> getAllSubjectBySpace(Space space);
-    void delete(Long id);
+    void delete(Subject subject);
     Subject update(Subject subject, String name);
     boolean subSubjectExistSubject(Subject subject, Long idSubSubject);
 }

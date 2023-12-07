@@ -11,6 +11,7 @@ public class MedicalSpecialties {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String speciality;
+    private String icone;
     @JsonIgnore
     @ManyToMany(mappedBy = "medicalSpecialties",fetch = FetchType.LAZY)
     private List<DoctorUser> doctors;
@@ -34,6 +35,14 @@ public class MedicalSpecialties {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getIcone() {
+        return icone;
+    }
+
+    public void setIcone(String icone) {
+        this.icone = icone;
     }
 
     public String getSpeciality() {

@@ -18,7 +18,7 @@ public class SubSubject {
     @ManyToOne
     private MedicalSpecialties medicalSpecialties;
 
-    @OneToMany(mappedBy = "subSubject", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subSubject", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Event> events =new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package com.example.cda.services.impl;
 
+import com.example.cda.modeles.Event;
 import com.example.cda.modeles.SubSubject;
 import com.example.cda.modeles.Subject;
 import com.example.cda.repositorys.SubSubjectRepository;
@@ -32,12 +33,8 @@ public class SubSubjectServiceImp implements SubSubjectService {
     }
 
     @Override
-    public void delete(Long id) {
-        SubSubject subSubject = subSubjectRepository.findById(id).orElse(null);
-        if(subSubject!=null){
-            subSubjectRepository.delete(subSubject);
-        }
-
+    public void delete(SubSubject subSubject) {
+        subSubjectRepository.delete(subSubject);
     }
 
     @Override

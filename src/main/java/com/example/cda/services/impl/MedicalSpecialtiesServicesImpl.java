@@ -16,11 +16,12 @@ public class MedicalSpecialtiesServicesImpl implements MedicalSpecialtiesService
     MedicalSpecialtiesRepository medicalRepository;
 
     @Override
-    public MedicalSpecialties save(String speciality) {
-        MedicalSpecialties medicalSp= medicalRepository.findBySpeciality(speciality);
+    public MedicalSpecialties save(MedicalSpecialties medicalSpecialties) {
+        MedicalSpecialties medicalSp= medicalRepository.findBySpeciality(medicalSpecialties.getSpeciality());
         if(medicalSp == null){
             medicalSp =   new MedicalSpecialties();
-            medicalSp.setSpeciality(speciality);
+            medicalSp.setSpeciality(medicalSpecialties.getSpeciality());
+            medicalSp.setIcone(medicalSpecialties.getIcone());
             return medicalRepository.save(medicalSp);
         }
         return null;
