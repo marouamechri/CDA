@@ -1,6 +1,7 @@
 package com.example.cda.services.impl;
 
 import com.example.cda.constents.CdaConstants;
+import com.example.cda.dtos.ResponseUser;
 import com.example.cda.exceptions.AccountExistsException;
 import com.example.cda.modeles.Role;
 import com.example.cda.modeles.User;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +25,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+
 @Service
 public class JwtUserServiceImpl implements JwtUserService {
     private final String signingKey;
@@ -157,7 +161,20 @@ public class JwtUserServiceImpl implements JwtUserService {
 
     @Override
     public UserDetails findByUserName(String username) {
+
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<ResponseUser> getAllAdmin() {
+        Iterable<User> users = userRepository.findAll();
+        List<ResponseUser> result = new ArrayList<>();
+        for (User u:users) {
+            if(u.getRolesString().contains("ADMIN")) {
+                result.add( new ResponseUser(u.getName(), u.getUsername()));
+            }
+        }
+        return result;
     }
 
    /* @Override

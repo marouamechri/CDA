@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class DoctorUserController implements com.example.cda.controllers.user.DoctorUserController {
     @Autowired
@@ -35,36 +35,23 @@ public class DoctorUserController implements com.example.cda.controllers.user.Do
         Space space= spaceService.get(idSpace);
         MedicalSpecialties medicalSpecialty = medicalSpecialtiesService.get(dto.getMedicalSpecialty());
         UserDetails user = userService.loadUserByUsername(principal.getName());
-        boolean DoctorExist = false;
 
         if((space!=null)&& (medicalSpecialty!=null) && (space.getUser().getUsername().equals(user.getUsername())  )){
-            List<DoctorUser> doctorUserList = doctorUserService.getAllDoctorByUser(user);
-            if(doctorUserList!=null){
-                for (DoctorUser d:doctorUserList) {
-                    if(d.getName().equals(dto.getName()))
-                    {
-                        DoctorExist = true;
-                    }
-                }
-            }
-            if(!DoctorExist){
-                DoctorUser doctorUser = new DoctorUser();
-                List<Space>spaces = new ArrayList<>();
-                List<MedicalSpecialties>medicalSpecialties = new ArrayList<>();
-                medicalSpecialties.add(medicalSpecialty);
-                spaces.add(space);
-                doctorUser.setName(dto.getName());
-                doctorUser.setAddress(dto.getAddress());
-                doctorUser.setPhone(dto.getPhone());
-                doctorUser.setSpaces(spaces);
-                doctorUser.setMedicalSpecialties(medicalSpecialties);
 
-                DoctorUser result = doctorUserService.save(doctorUser);
+            DoctorUser doctorUser = new DoctorUser();
+            List<Space>spaces = new ArrayList<>();
+            List<MedicalSpecialties>medicalSpecialties = new ArrayList<>();
+            medicalSpecialties.add(medicalSpecialty);
+            spaces.add(space);
+            doctorUser.setName(dto.getName());
+            doctorUser.setAddress(dto.getAddress());
+            doctorUser.setPhone(dto.getPhone());
+            doctorUser.setSpaces(spaces);
+            doctorUser.setMedicalSpecialties(medicalSpecialties);
 
-                return ResponseEntity.status(201).body(result);
-            }else {
-                throw new DoctorUserExistException();
-            }
+            DoctorUser result = doctorUserService.save(doctorUser);
+
+            return ResponseEntity.status(201).body(result);
 
         }else
             return ResponseEntity.status(403).body(null);
@@ -118,31 +105,16 @@ public class DoctorUserController implements com.example.cda.controllers.user.Do
         MedicalSpecialties medicalSpecialty = medicalSpecialtiesService.get(dto.getMedicalSpecialty());
         UserDetails user = userService.loadUserByUsername(principal.getName());
         DoctorUser doctorUser = doctorUserService.get(idDoctor);
-        boolean DoctorExist = false;
 
         if((space!=null)&& (doctorUser!=null)&&(medicalSpecialty!=null) && (space.getUser().getUsername().equals(user.getUsername())  )){
-            System.out.println("debut updateDoctor");
-            List<DoctorUser> doctorUserList = doctorUserService.getAllDoctorByUser(user);
-            if(doctorUserList!=null){
-                for (DoctorUser d:doctorUserList) {
-                    if(d.getName().equals(dto.getName()))
-                    {
-                        DoctorExist = true;
-                    }
-                }
-            }
-            if(!DoctorExist){
 
-                doctorUser.setName(dto.getName());
-                doctorUser.setAddress(dto.getAddress());
-                doctorUser.setPhone(dto.getPhone());
+            doctorUser.setName(dto.getName());
+            doctorUser.setAddress(dto.getAddress());
+            doctorUser.setPhone(dto.getPhone());
 
-                DoctorUser result = doctorUserService.save(doctorUser);
+            DoctorUser result = doctorUserService.save(doctorUser);
 
-                return ResponseEntity.status(201).body(result);
-            }else {
-                throw new DoctorUserExistException();
-            }
+            return ResponseEntity.status(201).body(result);
 
         }else
             return ResponseEntity.status(403).body(null);

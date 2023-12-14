@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @PreAuthorize("hasAuthority(\"USER\")")
 @RequestMapping(path = "/user/files")
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200"}, maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 public interface DocumentController {
     @RequestMapping(value="/upload", consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file")MultipartFile file, @RequestParam("id") String id, @RequestParam("action") String action);

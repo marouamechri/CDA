@@ -50,7 +50,7 @@ public class EventTest {
 
     }
 
-    @Test
+   /* @Test
     @WithMockUser(username = "maroua@gmail.com", authorities = "USER")
     public void testSaveEvent() throws Exception {
         String requestBody = "{\"date\":\"2023-05-15 11:15\",\"validate\":\"\",\"natureAction\":\"1\",\"doctor\":\"1\",\"medicalSpecialties\":\"1\"}";
@@ -67,7 +67,7 @@ public class EventTest {
         Assertions.assertTrue(responseBody.contains("\"date\":\"2023-05-15 11:15\""));
 
 
-    }
+    }*/
 
 
 

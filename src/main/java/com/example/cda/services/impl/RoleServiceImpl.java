@@ -1,19 +1,26 @@
 package com.example.cda.services.impl;
 
+import com.example.cda.dtos.ResponseUser;
 import com.example.cda.modeles.Role;
+import com.example.cda.modeles.User;
 import com.example.cda.repositorys.RoleRepository;
+import com.example.cda.repositorys.UserRepository;
 import com.example.cda.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Role create(String name) {
@@ -34,20 +41,24 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void attach(UserDetails user, Role role) {
-            Collection<GrantedAuthority> roles = (Collection<GrantedAuthority>) user.getAuthorities();
-            if(roles!=null){
+    public void attach(User user) {
+        //System.out.println("service attach");
+        Collection<Role> roles = new ArrayList<>();
+        roles.add(roleRepository.findByName("USER"));
+        roles.add(roleRepository.findByName("ADMIN"));
 
-                ((Collection<GrantedAuthority>) user.getAuthorities()).add(role);
-            }
+        user.setRoles(roles);
 
-
+        userRepository.save(user);
     }
 
     @Override
-    public void detach(UserDetails user, Role role) {
+    public void detach(User user) {
+        Collection<Role> roles = new ArrayList<>();
+        roles.add(roleRepository.findByName("USER"));
 
-            ((Collection<GrantedAuthority>) user.getAuthorities()).remove(role);
+        user.setRoles(roles);
+        userRepository.save(user);
 
     }
 
@@ -65,6 +76,8 @@ public class RoleServiceImpl implements RoleService {
     public void delete(Role role) {
         roleRepository.delete(role);
     }
+
+
 
 
 }

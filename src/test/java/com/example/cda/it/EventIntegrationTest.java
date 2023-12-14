@@ -5,7 +5,9 @@ import com.example.cda.modeles.*;
 import com.example.cda.repositorys.*;
 import com.example.cda.services.impl.*;
 import io.jsonwebtoken.lang.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
@@ -35,6 +37,7 @@ import java.util.Optional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@WithMockUser(username = "maroua@gmail.com", authorities = {"USER", "ADMIN"})
 public class EventIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -88,9 +91,41 @@ public class EventIntegrationTest {
     Event event;
     @MockBean
     Subject subject;
-
+    @AfterEach
+    public void resetMocks() {
+        Mockito.reset(
+                mockMvc,
+                mockEventRepository,
+                mockNatureActionRepository,
+                mockSubSubjectRepository,
+                mockDoctorUserRepository,
+                mockTaskRepository,
+                mockMedicalSpecialtiesRepository,
+                mockConsultationRepository,
+                mockTreatmentRepository,
+                mockSubjectRepository,
+                mockAnalyseRepository,
+                mockSpaceRepository,
+                mockuserRepository,
+                mockEventService,
+                mockSpaceService,
+                mockSubSubjectServiceImp,
+                mockNatureActionService,
+                mockUserService,
+                subSubject,
+                space,
+                natureAction,
+                medicalSpecialties,
+                doctor,
+                event,
+                subject
+        );
+    }
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
     @Test
-    @WithMockUser(username = "maroua@gmail.com", authorities = "USER")
     public void testSaveEventConsultation() throws Exception {
         //preparer les données de test
         String requestBody = "{\"date\":\"2020-05-15 11:15\",\"validate\":\"\",\"natureAction\":\"1\",\"doctor\":\"1\",\"medicalSpecialties\":\"1\"}";
@@ -144,14 +179,9 @@ public class EventIntegrationTest {
                 .content(requestBody)).andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        //Assertions.assertTrue(responseBody.contains("\"date\":\"2023-10-09 11:15\""));
-        //Mockito.verify(mockConsultationRepository).save(consultation);
-
 
     }
     @Test
-    @WithMockUser(username = "maroua@gmail.com", authorities = "USER")
     public void testSaveEventAnalyse() throws Exception {
 
         MockitoAnnotations.initMocks(this);
@@ -206,7 +236,6 @@ public class EventIntegrationTest {
 
     }
     @Test
-    @WithMockUser(username = "maroua@gmail.com", authorities = "USER")
     public void testSaveEventTreatment() throws Exception {
 
         MockitoAnnotations.initMocks(this);
@@ -261,7 +290,6 @@ public class EventIntegrationTest {
 
 
     @Test
-    @WithMockUser(username = "maroua@gmail.com", authorities = "USER")
     public void testGetEvent() throws Exception {
 
         MockitoAnnotations.initMocks(this);
@@ -285,7 +313,6 @@ public class EventIntegrationTest {
 
     }
     @Test
-    @WithMockUser()
     public void testGetEventNotFound() throws Exception {
 
 
@@ -311,7 +338,6 @@ public class EventIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "maroua@gmail.com", authorities = "USER")
     public  void testGetAllEventByUser() throws Exception {
 
         MockitoAnnotations.initMocks(this);
@@ -358,7 +384,6 @@ public class EventIntegrationTest {
 
     }
     @Test
-    @WithMockUser
     public void testGetAllEventBySubject() throws Exception {
         MockitoAnnotations.initMocks(this);
         //preparer le test
@@ -410,7 +435,6 @@ public class EventIntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void testGetAllEventBySubSubject() throws Exception {
         MockitoAnnotations.initMocks(this);
         //preparer le test
@@ -464,7 +488,6 @@ public class EventIntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void testValidEvent() throws Exception {
         MockitoAnnotations.initMocks(this);
         Long idEvent= 1L;

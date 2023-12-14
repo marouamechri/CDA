@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class EventControllerImpl implements EventController {
 

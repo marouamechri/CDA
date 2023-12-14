@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class SubSubjectControllerImp implements SubSubjectController {
     @Autowired
@@ -127,7 +127,7 @@ public class SubSubjectControllerImp implements SubSubjectController {
                 SubSubject result = subSubjectService.save(subSubject);
                 return ResponseEntity.status(201).body(result);
             } else {
-                throw new SubSubjectExistException();
+                return ResponseEntity.status(201).body(null);
             }
 
         } else

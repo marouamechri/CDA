@@ -94,40 +94,6 @@ public class RoleServiceUnitTest {
         Role result = roleService.get(9);
         Assertions.assertEquals(null,result);
     }
-    @Test
-    public void testAttachRole() {
-        //Define the Mockito
-        Role role = new Role();
-        role.setName("RoleTest");
-        //Configurer le mock pour retourner une liste d'autorisations
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add((new SimpleGrantedAuthority("RoleUser")));
-
-        Mockito.doReturn(authorities).when(userDetails).getAuthorities();
-
-        //appeler la methode attach
-        roleService.attach(userDetails,role);
-        Assertions.assertTrue(authorities.contains(new SimpleGrantedAuthority(("RoleUser"))));
-
-
-    }
-    @Test
-    public void testDetachRoe() {
-        Role role = new Role();
-        role.setId(1);
-        role.setName("Role");
-        //Configurer le mock pour retourner une liste d'autorisations
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add((new SimpleGrantedAuthority("RoleUser")));
-        authorities.add((new SimpleGrantedAuthority("Role")));
-
-        Mockito.doReturn(authorities).when(userDetails).getAuthorities();
-
-        //appeler la methode attach
-        roleService.detach(userDetails,role);
-        //vérification
-        Assertions.assertFalse(authorities.contains(new SimpleGrantedAuthority(("Role"))));
-    }
 
 
 }

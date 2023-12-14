@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class SubjectControllerImpl implements SubjectController {
     @Autowired
@@ -41,7 +41,6 @@ public class SubjectControllerImpl implements SubjectController {
         boolean subjectExist = false;
 
         if((space!=null) && (user.getId() == space.getUser().getId())){
-            System.out.println("etape 1");
             Iterable<Subject> subjects = subjectService.getAllSubjectBySpace(space);
             if(subjects!=null) {
                 for (Subject s : subjects) {
@@ -51,7 +50,6 @@ public class SubjectControllerImpl implements SubjectController {
                 }
             }
             if(!subjectExist){
-                System.out.println("etape 2");
 
                 Subject subject = new Subject();
                 subject.setTitle(dto.getTitle());
@@ -60,7 +58,7 @@ public class SubjectControllerImpl implements SubjectController {
 
                 return ResponseEntity.status(201).body(result);
             }else {
-                throw new SubjectExistException();
+                return ResponseEntity.status(201).body(null);
             }
 
         }else

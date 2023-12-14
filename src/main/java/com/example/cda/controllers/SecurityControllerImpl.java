@@ -27,7 +27,6 @@ public class SecurityControllerImpl  implements SecurityController {
     @Override
     public ResponseEntity<AuthResponseDto> register(@RequestBody AuthRequestDto dto) throws AccountExistsException {
         UserDetails userDetails = jwtUserService.findByUserName(dto.getUsername());
-        System.out.println("signup");
         if (userDetails != null) {
             throw new AccountExistsException();
         }

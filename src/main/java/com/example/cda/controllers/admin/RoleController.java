@@ -1,5 +1,6 @@
 package com.example.cda.controllers.admin;
 
+import com.example.cda.dtos.ResponseUser;
 import com.example.cda.dtos.RoleDto;
 import com.example.cda.exceptions.UserNotFoundException;
 import com.example.cda.modeles.Role;
@@ -11,26 +12,25 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "*")
 @RequestMapping("/admin")
 public interface RoleController {
     @PreAuthorize("hasAuthority(\"ADMIN\")")
     @GetMapping("/roles")
     ResponseEntity<Iterable<Role>> list() ;
-    @PreAuthorize("hasAuthority(\"ADMIN\")")
+    @PreAuthorize("hasAuthority('USER') and hasAuthority('ADMIN')")
     @PostMapping("/roles")
     ResponseEntity<Role> create(@Valid @RequestBody RoleDto dto) throws URISyntaxException ;
-    @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @PostMapping("/roles/{roleId}/users/{userId}/attach")
-    ResponseEntity<UserDetails> attach(@PathVariable int roleId, @PathVariable int userId) throws UserNotFoundException, RoleNotFoundException;
-    @PreAuthorize("hasAuthority(\"ADMIN\")")
-    @PostMapping("/roles/{roleId}/users/{userId}/detach")
-    ResponseEntity<UserDetails> detach(@PathVariable int roleId, @PathVariable int userId) throws UserNotFoundException, RoleNotFoundException;
-    @PreAuthorize("hasAuthority(\"ADMIN\")")
+    @PostMapping("/attach")
+    ResponseEntity<UserDetails> attach(@RequestBody String email) ;
+    @PostMapping("/detach")
+    ResponseEntity<UserDetails> detach(@RequestBody String email ) ;
     @DeleteMapping("/roles/{id}")
     ResponseEntity<?> delete(@PathVariable int id) ;
-
-
+    @GetMapping ("")
+    ResponseEntity<List<ResponseUser>> getListAdmin() ;
 
     }

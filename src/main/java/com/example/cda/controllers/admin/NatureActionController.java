@@ -13,9 +13,9 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "*")
 public interface NatureActionController {
-    @PreAuthorize("hasAuthority(\"ADMIN\")")
+    @PreAuthorize("hasAuthority('USER') and hasAuthority('ADMIN')")
     @PostMapping("/admin/natureAction")
     ResponseEntity<NatureAction> createNatureAction(@Valid @RequestBody NatureActionDto dto) throws NatureExistException, URISyntaxException;
     @PreAuthorize("hasAuthority(\"USER\")")
@@ -32,7 +32,7 @@ public interface NatureActionController {
     @PreAuthorize("hasAuthority(\"ADMIN\")")
     @DeleteMapping("/admin/natureAction/{id}")
     ResponseEntity<?> deleteNatureAction(@PathVariable int id)throws NatureNotFoundException;
-    @PreAuthorize("hasAuthority(\"ADMIN\")")
+    @PreAuthorize("hasAuthority('USER') and hasAuthority('ADMIN')")
     @PutMapping("/admin/natureAction/{id}")
     ResponseEntity<NatureAction> updateNatureAction( @Valid @RequestBody NatureActionDto dto, @PathVariable int id) throws NatureNotFoundException;
 

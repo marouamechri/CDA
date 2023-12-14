@@ -19,7 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class SpaceControllerImp  implements SpaceController {
     @Autowired
@@ -38,7 +38,8 @@ public class SpaceControllerImp  implements SpaceController {
             newSpace.setUser((User)user);
             Space result =  spaceService.save(newSpace,(User) user);
             if(result==null){
-                throw new SpaceExistException();
+                return ResponseEntity.status(201).body(null);
+
             }else
             return ResponseEntity.status(201).body(result);
         }else

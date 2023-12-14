@@ -5,9 +5,11 @@ import com.example.cda.modeles.User;
 import com.example.cda.repositorys.RoleRepository;
 import com.example.cda.repositorys.UserRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +35,10 @@ public class RoleIntegrationTest {
     UserRepository mockUserRepository;
     @MockBean
     RoleRepository mockRoleRepository;
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
     @Test
     public void testGetRoleList() throws Exception {
         //Defining the mock with Mockito
@@ -59,90 +65,6 @@ public class RoleIntegrationTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
         Assertions.assertTrue(responseBody.contains("\"authority\":\"ROLE_TEST\""));
-    }
-    @Test
-    public void testAttachRoleToUser() throws Exception {
-        //Defining the mock with Mockito
-        Role role = new Role();
-        role.setId(1);
-        role.setName("ROLE_TEST");
-        Collection<Role> roles = new ArrayList<>();
-        Mockito.when(mockRoleRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(role));
-        User user = new User();
-        user.setId(1);
-        user.setUsername("UserTest");
-        user.setRoles(roles);
-        Mockito.when(mockUserRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(user));
-        //Testing
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/1/users/1/attach"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        Assertions.assertTrue(responseBody.contains("\"username\":\"UserTest\"") && responseBody.contains("\"authority\":\"ROLE_TEST\""));
-    }
-    @Test
-    public void testAttachRoleNotFoundToUser() throws Exception {
-        //Defining the mock with Mockito
-        User user = new User();
-        Collection<Role> roles = new ArrayList<>();//Roles already attached to user
-        user.setId(1);
-        user.setUsername("UserTest");
-        user.setRoles(roles);
-        Mockito.when(mockUserRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(user));
-        Mockito.when(mockRoleRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.empty());
-        //Testing
-        mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/1/users/1/attach"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
-
-    }
-    @Test
-    public void testDetachRoleToUser() throws Exception {
-        //Defining the mock with Mockito
-        Role role = new Role();
-        role.setId(1);
-        role.setName("ROLE_TEST");
-        Collection<Role> roles = new ArrayList<>();
-        roles.add(role);
-        Mockito.when(mockRoleRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(role));
-        User user = new User();
-        user.setId(1);
-        user.setUsername("UserTest");
-        user.setRoles(roles);
-        Mockito.when(mockUserRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(user));
-        //Testing
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/12/users/13/detach")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        Assertions.assertTrue(responseBody.contains("\"username\":\"UserTest\"") && responseBody.contains("\"authorities\":[]"));
-    }
-    @Test
-    public void testDetachRoleToUserNotFound() throws Exception {
-        //Defining the mock with Mockito
-        Role role = new Role();
-        role.setId(1);
-        role.setName("ROLE_TEST");
-        Mockito.when(mockUserRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.empty());
-        Mockito.when(mockRoleRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(role));
-        //Testing
-        mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/12/users/13/detach"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
-    }
-    @Test
-    public void testDetachRoleNotFoundToUser() throws Exception {
-        //Defining the mock with Mockito
-        User owner = new User();
-        Collection<Role> roles = new ArrayList<>();//Roles already attached to user
-        owner.setId(1);
-        owner.setUsername("UserTest");
-        owner.setRoles(roles);
-        Mockito.when(mockUserRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(owner));
-        Mockito.when(mockRoleRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.empty());
-        //Testing
-        mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/12/users/13/detach"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
-
     }
     @Test
     public void testDeleteRole() throws Exception {

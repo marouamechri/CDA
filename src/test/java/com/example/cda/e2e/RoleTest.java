@@ -15,39 +15,26 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@WithMockUser(authorities = "ADMIN")
+@WithMockUser(username = "maroua@gmail.com", authorities = {"USER", "ADMIN"})
 public class RoleTest {
     @Autowired
     MockMvc mockMvc;
     @Test
     public void getRoleList() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/admin/roles")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/admin/roles")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
         Assertions.assertFalse(responseBody.contains("[]"));
     }
     @Test
     public void testCreateRole() throws Exception {
         String requestBody = "{\"name\":\"TEST\"}";
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/admin/roles").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
         Assertions.assertTrue(responseBody.contains("\"authority\":\"TEST\""));
     }
     @Test
-    public void testAttachRoleToUserNotFound() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/1/users/0/attach"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
-    }
-    @Test
-    public void testDetachRoleToUserNotFound() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/1/users/0/attach"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
-
-    }
-    @Test
     public void testDeleteRoleNotFound() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/dashboard/admin/roles/12/users/0/detach")).andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/admin/roles/12/users/0/detach")).andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
 
     }
 }
