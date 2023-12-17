@@ -1,19 +1,15 @@
 package com.example.cda.services.impl;
 
-import com.example.cda.dtos.ResponseUser;
 import com.example.cda.modeles.Role;
 import com.example.cda.modeles.User;
 import com.example.cda.repositorys.RoleRepository;
 import com.example.cda.repositorys.UserRepository;
 import com.example.cda.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
